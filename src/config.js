@@ -4,7 +4,7 @@ const publicPath = path.resolve("public");
 const imgPath = path.join(publicPath, "img");
 
 module.exports = {
-    jwtSecret: "jinwandalaohu",
+    jwtSecret: "rohnKey",
     publicPath,
-    imgPath,
+    imgPath, 
 };

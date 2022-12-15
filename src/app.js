@@ -1,6 +1,7 @@
 /* 引入依赖 */
 const express = require("express");
 const bodyParser = require('body-parser');
+const { _console } = require('./utils/consoleColor.js');
 /* 登录校验中间件 */
 const loginCheck = require("./middlewares/loginCheck");
 
@@ -18,9 +19,8 @@ const app = express();
 app.use(bodyParser.json()) // 支持 json 格式
 // 使用第三方插件 qs 来处理
 app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(express.json());//json读写支持
-app.use(express.urlencoded({ extended: false }));//表单支持
+// 全局_console
+global._console = _console
 
 /* 添加路由中间件 */
 app.use((req,res,next)=>{

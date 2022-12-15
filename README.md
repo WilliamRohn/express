@@ -1,2 +1,1 @@
 # express-mangodb
-express-mangodb

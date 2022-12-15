@@ -5,13 +5,23 @@ const { jwtSecret } = require("../config");
 class JWT {
     /* 生成token 返回token*/
     static generate(value, expires = "7 day") {
-        console.log("JWT generate value",value);
-        // value 为传入值， expires为过期时间，这两者都会在token字符串中题先
+        // value 为传入值， expires为过期时间，这两者都会在token字符串中体现
         try {
-            return jsonwebtoken.sign(value, jwtSecret, { expiresIn: expires });
+            let token = jsonwebtoken.sign(value, jwtSecret, { expiresIn: expires });
+            return token
         } catch (e) {
             console.error("jwt sign error --->", e);
             return "";
+        }
+    }
+
+    /* 解析token */
+    static decode(token) {
+        try {
+            return jsonwebtoken.decode(token);
+        } catch (e) {
+            console.error("jwt decode fail --->", e);
+            return false;
         }
     }
 

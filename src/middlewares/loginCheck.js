@@ -19,16 +19,32 @@
 
 /* token校验登录 */
 const JWT = require("../utils/jwtUtil");
-const regToken = /Bearer (.+)/
-const loginCheck = function (req, res, next) {
-    const token = req.headers.authorization
-    const info = JWT.verify(token);
-    console.log("verifiedRet", info);
+const { _console } = require('../utils/consoleColor.js');
+const model = require("../models/userModel");
 
-    info ? next() : res.json({
-        code: 401,
-        msg:"请先登录"
-    });
+const loginCheck = function (req, res, next) {
+    /* 取请求头中的token、userAgent,
+        解析token(jwt),
+        拿出其中的用户名,
+        跟redis中对应的用户信息比对 */
+    let token = req.headers.authorization || false
+    let decode = JWT.decode(token) || ''
+    let userAgent = req.headers["user-agent"] || ''
+    const info = JWT.verify(token);
+    model.redisGet(decode.username, (result)=>{
+        let db_res = JSON.parse(result) || null
+        // 验证登录状态
+        if (info&&db_res&&db_res.islogin&&userAgent == db_res.userAgent) {
+            next()
+        } else {
+            _console.dir('JWT:'+info);
+            _console.dir('db_res:'+db_res);
+            res.json({
+                code: 401,
+                msg:"请先登录"
+            });
+        } 
+    })
 };
 
 module.exports = loginCheck

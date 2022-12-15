@@ -15,20 +15,27 @@ module.exports = {
     },
 
     /* 实际处理登录请求 */
-    login: async function({ username, password }) {
+    login: async function({ username, password }, req, res) {
         const users = await model.getUser({ username, password });
 
         // 如果登录成功 记录之
         let token = null;
+        let userAgent = req.headers["user-agent"]
         if (users.length) {
-            token = JWT.generate({ username });
-            console.log("login:token=", token);
+            token = JWT.generate({ username })
+            model.redisSet(username, JSON.stringify({
+                islogin: true,
+                userAgent,
+                token,
+            }), 3600, (res)=>{
+                _console.dir('res:---',res);
+            })
         }
-
+        
         return Promise.resolve({
             code: users.length > 0 ? 200 : 401,
             msg: users.length > 0 ? "登录成功" : "登录失败！账号或密码错误！",
-            token,
+            token
         });
     },
 
@@ -40,5 +47,5 @@ module.exports = {
     /* 获取用户信息 */
     getUser: async function(user){
         return await model.getUser(user)
-    }
+    },
 };
