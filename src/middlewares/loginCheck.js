@@ -37,8 +37,8 @@ const loginCheck = function (req, res, next) {
         if (info&&db_res&&db_res.islogin&&userAgent == db_res.userAgent) {
             next()
         } else {
-            _console.dir('JWT:'+info);
-            _console.dir('db_res:'+db_res);
+            // _console.dir('JWT:'+info);
+            // _console.dir('db_res:'+db_res);
             res.json({
                 code: 401,
                 msg:"请先登录"
