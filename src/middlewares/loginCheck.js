@@ -22,7 +22,7 @@ const JWT = require("../utils/jwtUtil");
 const { _console } = require('../utils/consoleColor.js');
 const model = require("../models/userModel");
 
-const loginCheck = function (req, res, next) {
+const loginCheck = async function (req, res, next) {
     /* 取请求头中的token、userAgent,
         解析token(jwt),
         拿出其中的用户名,
@@ -31,20 +31,18 @@ const loginCheck = function (req, res, next) {
     let decode = JWT.decode(token) || ''
     let userAgent = req.headers["user-agent"] || ''
     const info = JWT.verify(token);
-    model.redisGet(decode.username, (result)=>{
-        let db_res = JSON.parse(result) || null
-        // 验证登录状态
-        if (info&&db_res&&db_res.islogin&&userAgent == db_res.userAgent) {
-            next()
-        } else {
-            _console.dir('JWT:'+info);
-            _console.dir('db_res:'+db_res);
-            res.json({
-                code: 401,
-                msg:"请先登录"
-            });
-        } 
-    })
+    let db_res = JSON.parse(await model.redisGet(decode.username)) || null
+    // 验证登录状态
+    if (info&&db_res&&db_res.islogin&&userAgent == db_res.userAgent) {
+        next()
+    } else {
+        _console.dir('JWT:'+info);
+        _console.dir('db_res:'+db_res);
+        res.json({
+            code: 401,
+            msg:"请先登录",
+        });
+    } 
 };
 
 module.exports = loginCheck

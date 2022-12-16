@@ -19,20 +19,21 @@ const app = express();
 app.use(bodyParser.json()) // 支持 json 格式
 // 使用第三方插件 qs 来处理
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use("/static", express.static('public'))
 // 全局_console
 global._console = _console
 
 /* 添加路由中间件 */
 app.use((req,res,next)=>{
-    if (req.path.includes("login")||req.path.includes("register")) {
+    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")) {
         next()
     } else {
         loginCheck(req,res,()=>{
             next()
         })
     }
-
 })
+
 app.use("/", indexRouter);
 app.use("/user", userRouter);
 // app.use("/file", fileRouter);

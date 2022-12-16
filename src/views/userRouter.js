@@ -6,8 +6,11 @@ const { _console } = require('../utils/consoleColor.js');
 
 const userRouter = express.Router();
 
-userRouter.get("/", function (req, res, next) {
-    res.send("用户首页");
+userRouter.get("/verifycode", async function (req, res) {
+    const codeDate = await controller.getsvgCaptcha()
+    let ip = req.connection.remoteAddress || '';
+    _console.dir('客户端IP:'+ip);
+    res.send(codeDate)
 })
 
 /* POST /user 用户注册 */

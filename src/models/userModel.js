@@ -18,32 +18,34 @@ function updateUser(id, user) {
 }
 
 /* redisSet 往redis中存数据,expire为过期时间,单位为秒 */
-function redisSet(_key, value, expire, cb) {
-    redisClient().set(_key,value,(err,res)=>{
+function redisSet(_key, value, expire) {
+    return new Promise((resolve, reject)=>{
         /* redis操作的回调函数第一个参数默认是异常报错,所以一定要cb做异常处理 */
-        if (err||res) {
-            console.error(err);
-            cb(err,null);
-            return;
-        }
-        if (!isNaN(expire) && expire > 0) {
-            redisClient().expire(_key, parseInt(expire));
-            _console.info(`redis-set ${_key}写入成功,${expire}秒后过期`);
-        }
-        cb(res)
+        redisClient().set(_key,value, (err,res)=>{
+            if (err&&res) {
+                reject(null)
+            }
+            if (!isNaN(expire) && expire > 0) {
+                redisClient().expire(_key, parseInt(expire));
+                _console.info(`redis-set ${_key}写入成功,${expire}秒后过期`);
+            }
+            resolve(res)
+        })
     })
 }
 
-function redisGet(_key, cb) {
-    redisClient().get(_key, function(err,res){
+function redisGet(_key) {
+    return new Promise((resolve, reject)=>{
         /* redis操作的回调函数第一个参数默认是异常报错,所以一定要cb做异常处理 */
-        if (err||res) {
-            cb(null);
-            return;
-        }
-        cb(res)
-    })
+        redisClient().get(_key, (err,res)=>{
+            if (err&&res) {
+                reject(null)
+            }
+            resolve(res)
+        })
+    });
 }
+
 module.exports = {
     addUser,
     getUser,
