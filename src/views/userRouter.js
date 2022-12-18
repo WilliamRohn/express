@@ -6,17 +6,34 @@ const { _console } = require('../utils/consoleColor.js');
 
 const userRouter = express.Router();
 
+/* 获取验证码 */
 userRouter.get("/verifycode", async function (req, res) {
     const codeDate = await controller.getsvgCaptcha()
     let ip = req.connection.remoteAddress || '';
-    _console.dir('客户端IP:'+ip);
-    res.send(codeDate)
+    _console.dir('客户端IP:' + ip);
+    if (codeDate) {
+        res.send(codeDate)
+    } else {
+        res.send({code: 400, msg: '获取验证码失败'})
+    }
+})
+
+/* 查询验证码 */
+userRouter.get("/checkcode", async function (req, res) {
+    const checkCaptcha = await controller.checkCaptcha(req.body.code.toLowerCase());
+    if (checkCaptcha) {
+        res.send({code: 200, msg: '验证码查询成功'})
+    } else {
+        res.send({code: 400, msg: '验证码查询失败'})
+    }
 })
 
 /* POST /user 用户注册 */
 userRouter.post("/register", async (req, res) => {
     const result = await controller.register(req.body);
-    if (result.acknowledged) {
+    const checkCaptcha = await controller.checkCaptcha(req.body.code.toLowerCase());
+
+    if (result.acknowledged&&checkCaptcha) {
         res.send({code: 200, msg:'注册成功'})
     } else {
         res.send({code: 400, msg:'用户已存在'})
@@ -26,7 +43,14 @@ userRouter.post("/register", async (req, res) => {
 /* POST /user 用户登录 */
 userRouter.post("/login", async (req, res) => {
     const ret = await controller.login(req.body, req, res);
-    res.send(ret)
+    const checkCaptcha = await controller.checkCaptcha(req.body.code.toLowerCase());
+
+    if (checkCaptcha) {
+        res.send(ret)
+    } else {
+        res.send({code: 400, msg:'验证码错误'})
+    }
+    
 });
 
 /* POST /user 修改用户信息 */

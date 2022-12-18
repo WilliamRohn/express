@@ -38,6 +38,7 @@ function redisGet(_key) {
     return new Promise((resolve, reject)=>{
         /* redis操作的回调函数第一个参数默认是异常报错,所以一定要cb做异常处理 */
         redisClient().get(_key, (err,res)=>{
+            _console.info(`redis-get ${_key}查询成功,查询结果:${err+','+res}`);
             if (err&&res) {
                 reject(null)
             }
