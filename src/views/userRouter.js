@@ -9,8 +9,6 @@ const userRouter = express.Router();
 /* 获取验证码 */
 userRouter.get("/verifycode", async function (req, res) {
     const codeDate = await controller.getsvgCaptcha()
-    let ip = req.connection.remoteAddress || '';
-    _console.dir('客户端IP:' + ip);
     if (codeDate) {
         res.send(codeDate)
     } else {
@@ -20,11 +18,11 @@ userRouter.get("/verifycode", async function (req, res) {
 
 /* 查询验证码 */
 userRouter.get("/checkcode", async function (req, res) {
-    const checkCaptcha = await controller.checkCaptcha(req.body.code.toLowerCase());
+    const checkCaptcha = await controller.checkCaptcha(req.query.code.toLowerCase());
     if (checkCaptcha) {
         res.send({code: 200, msg: '验证码查询成功'})
     } else {
-        res.send({code: 400, msg: '验证码查询失败'})
+        res.send({code: 400, msg: '查询验证码失败'})
     }
 })
 

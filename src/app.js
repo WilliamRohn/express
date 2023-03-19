@@ -25,7 +25,7 @@ global._console = _console
 
 /* 添加路由中间件 */
 app.use((req,res,next)=>{
-    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")) {
+    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")) {
         next()
     } else {
         loginCheck(req,res,()=>{
