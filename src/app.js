@@ -7,6 +7,7 @@ const loginCheck = require("./middlewares/loginCheck");
 
 /* 引入路由 */
 const indexRouter = require("./views/indexRouter");
+const chatgptRouter = require("./views/chatgptRouter");
 const userRouter = require("./views/userRouter");
 // const fileRouter = require("./views/fileRouter");
 
@@ -25,7 +26,7 @@ global._console = _console
 
 /* 添加路由中间件 */
 app.use((req,res,next)=>{
-    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")) {
+    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")||req.path.includes("chatgpt")) {
         next()
     } else {
         loginCheck(req,res,()=>{
@@ -35,6 +36,7 @@ app.use((req,res,next)=>{
 })
 
 app.use("/", indexRouter);
+app.use("/chatgpt", chatgptRouter);
 app.use("/user", userRouter);
 // app.use("/file", fileRouter);
 

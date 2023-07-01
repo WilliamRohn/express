@@ -1,8 +1,8 @@
 const express = require("express");
 const JWT = require("../utils/jwtUtil");
+const decrypt = require("../utils/utils.js");
 const controller = require("../controllers/userController");
-const { _console } = require('../utils/consoleColor.js');
-// const { getUser, updateUser } = require("../models/userModel");
+const { getUser, updateUser } = require("../models/userModel");
 
 const userRouter = express.Router();
 
@@ -41,6 +41,8 @@ userRouter.post("/register", async (req, res) => {
 /* POST /user 用户登录 */
 userRouter.post("/login", async (req, res) => {
     const ret = await controller.login(req.body, req, res);
+    // console.log(ret);
+    // res.send(ret)
     const checkCaptcha = await controller.checkCaptcha(req.body.code.toLowerCase());
 
     if (checkCaptcha) {
@@ -78,5 +80,4 @@ userRouter.get(`/info${/\w+/}`, async (req, res) => {
         data: {...users[0]}
     })
 });
-
 module.exports = userRouter;
