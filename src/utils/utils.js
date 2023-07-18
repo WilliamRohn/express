@@ -1,9 +1,9 @@
 module.exports = {
-    defendHF: async function (req, res) {
-        let ip = req.connection.remoteAddress || '';
-        _console.dir('客户端IP:'+req.connection.remoteAddress);
-        if (ip) {
-            
-        }
+    //获取当前用户的IP
+    getClientIp: function (req) {
+        return req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || '';
     }
 }

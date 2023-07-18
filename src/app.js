@@ -25,7 +25,7 @@ global._console = _console
 
 /* 添加路由中间件 */
 app.use((req,res,next)=>{
-    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")) {
+    if (req.path=='/'||req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")) {
         next()
     } else {
         loginCheck(req,res,()=>{
@@ -41,5 +41,5 @@ app.use("/user", userRouter);
 /* 挂载到指定端口 */
 const server = app.listen(8002, function () {
     const port = server.address().port;
-    console.log(`访问地址为 http://localhost:${port}`);
+    _console.dir(`访问地址: http://localhost:${port}`);
 });
