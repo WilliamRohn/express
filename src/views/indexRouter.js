@@ -1,11 +1,13 @@
 const express = require("express");
+const { getClientIp } = require("../utils/utils");
 const router = express.Router();
 const loginCheck = require("../middlewares/loginCheck");
 const puppeteer = require("../middlewares/puppeteer")
 
 /* 定义路由接口 */
 router.get("/", function (req, res) {
-    res.send("Hello From indexRouter");
+    let ip = getClientIp(req).match(/\d+.\d+.\d+.\d+/);
+    res.send(`Welcom to indexRouter...Your IP is ${ip ? ip : getClientIp(req)}`);
 });
 
 /* GET /testtoken 使用自定义中间件：验证token */

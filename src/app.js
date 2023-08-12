@@ -45,5 +45,5 @@ app.use("/user", userRouter);
 /* 挂载到指定端口 */
 const server = app.listen(8002, function () {
     const port = server.address().port;
-    console.log(`访问地址为 http://localhost:${port}`);
+    _console.dir(`访问地址: http://localhost:${port}`);
 });
