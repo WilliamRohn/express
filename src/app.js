@@ -12,6 +12,7 @@ const userRouter = require("./views/userRouter");
 // const fileRouter = require("./views/fileRouter");
 
 const multer = require("multer");
+const { register } = require("./controllers/userController.js");
 
 /* 创建express实例 */
 const app = express();
@@ -24,21 +25,22 @@ app.use("/static", express.static('public'))
 // 全局_console
 global._console = _console
 
-/* 添加路由中间件 */
-app.use((req,res,next)=>{
-    if (req.path.includes("login")||req.path.includes("register")||req.path.includes("verifycode")||req.path.includes("favicon.ico")||req.path.includes("checkcode")||req.path.includes("chatgpt")) {
-        next()
-    } else {
-        loginCheck(req,res,()=>{
-            next()
-        })
-    }
-})
-
 app.use("/", indexRouter);
 app.use("/chatgpt", chatgptRouter);
 app.use("/user", userRouter);
 // app.use("/file", fileRouter);
+
+/* 添加路由中间件 */
+// app.use((req,res,next)=>{
+//     let ingoreRoutes = ['login','register','verifycode','favicon.ico','checkcode','chatgpt','search']
+//     if (req.path.includes(ingoreRoutes)) {
+//         next()
+//     } else {
+//         loginCheck(req,res,()=>{
+//             next()
+//         })
+//     }
+// })
 
 /* 挂载到指定端口 */
 const server = app.listen(8002, function () {

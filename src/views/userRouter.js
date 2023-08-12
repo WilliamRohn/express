@@ -80,4 +80,5 @@ userRouter.get(`/info${/\w+/}`, async (req, res) => {
         data: {...users[0]}
     })
 });
+
 module.exports = userRouter;

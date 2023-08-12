@@ -5,5 +5,5 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
-// const response = openai.listEngines();
+
 module.exports = openai
